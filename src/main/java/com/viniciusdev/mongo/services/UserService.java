@@ -1,6 +1,7 @@
 package com.viniciusdev.mongo.services;
 
 import com.viniciusdev.mongo.domain.User;
+import com.viniciusdev.mongo.dto.UserDTO;
 import com.viniciusdev.mongo.repositories.UserRepository;
 import com.viniciusdev.mongo.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public User fromDTO(UserDTO objectDto) {
+        return new User(objectDto.getId(), objectDto.getName(), objectDto.getEmail());
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -22,6 +27,10 @@ public class UserService {
     public User findById(String id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+    }
+
+    public User insert(User object) {
+        return userRepository.insert(object);
     }
 
 }

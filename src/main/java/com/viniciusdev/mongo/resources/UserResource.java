@@ -3,13 +3,13 @@ package com.viniciusdev.mongo.resources;
 import com.viniciusdev.mongo.domain.User;
 import com.viniciusdev.mongo.dto.UserDTO;
 import com.viniciusdev.mongo.services.UserService;
+import jdk.jshell.EvalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +32,20 @@ public class UserResource {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<UserDTO> findById(@PathVariable String id) {
-        User user = userService.findById(id);
-        return ResponseEntity.ok().body(new UserDTO(user));
+        User object = userService.findById(id);
+        return ResponseEntity.ok().body(new UserDTO(object));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Void> insert(@RequestBody UserDTO objectDto) {
+        User object = userService.fromDTO(objectDto);
+        object = userService.insert(object);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(object.getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
 }
