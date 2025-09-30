@@ -1,5 +1,6 @@
 package com.viniciusdev.mongo.resources;
 
+import com.viniciusdev.mongo.domain.Post;
 import com.viniciusdev.mongo.domain.User;
 import com.viniciusdev.mongo.dto.UserDTO;
 import com.viniciusdev.mongo.services.UserService;
@@ -60,6 +61,12 @@ public class UserResource {
         object.setId(id);
         object = userService.update(object);
         return ResponseEntity.ok().body(new UserDTO(object));
+    }
+
+    @RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id) {
+        User object = userService.findById(id);
+        return ResponseEntity.ok().body(object.getPosts());
     }
 
 }
