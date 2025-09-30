@@ -33,4 +33,8 @@ public class UserService {
         return userRepository.insert(object);
     }
 
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
+    }
+
 }
