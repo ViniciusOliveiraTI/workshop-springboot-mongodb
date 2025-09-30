@@ -16,6 +16,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private void updateData(User newObject, User object) {
+        newObject.setName(object.getName());
+        newObject.setEmail(object.getEmail());
+    }
+
     public User fromDTO(UserDTO objectDto) {
         return new User(objectDto.getId(), objectDto.getName(), objectDto.getEmail());
     }
@@ -35,6 +40,12 @@ public class UserService {
 
     public void deleteById(String id) {
         userRepository.deleteById(id);
+    }
+
+    public User update(User object) {
+        User newObject = findById(object.getId());
+        updateData(newObject, object);
+        return userRepository.save(newObject);
     }
 
 }
